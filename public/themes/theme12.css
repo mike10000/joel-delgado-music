@@ -34,14 +34,110 @@ img { max-width: 100%; }
 .theme-select { font: inherit; font-size: 0.9rem; padding: 8px 12px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; }
 .theme-select:focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent); }
 
-.hero { background: radial-gradient(1200px 500px at 80% -10%, color-mix(in srgb, var(--primary) 22%, transparent), transparent), var(--bg); padding: 72px 0; }
-.hero-inner { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: center; }
+.hero { position: relative; overflow: hidden; background: radial-gradient(1200px 500px at 80% -10%, color-mix(in srgb, var(--primary) 22%, transparent), transparent), var(--bg); padding: 72px 0; }
+.hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: center; }
 .hero-eyebrow { text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.8rem; color: var(--primary); font-weight: 700; margin: 0 0 10px; }
 .hero-title { font-family: var(--font-head); font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.02; margin: 0 0 14px; color: var(--accent); }
 .hero-tagline { font-size: 1.2rem; color: var(--muted); max-width: 30ch; margin: 0 0 26px; }
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 .hero-photo { aspect-ratio: 4 / 5; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
 .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+
+/* drifting stage-light orbs */
+.hero-orb { position: absolute; border-radius: 50%; filter: blur(54px); opacity: 0.45; will-change: transform; }
+.hero-orb-a { width: 440px; height: 440px; top: -150px; left: -110px; background: color-mix(in srgb, var(--primary) 55%, transparent); animation: hero-drift-a 18s ease-in-out infinite; }
+.hero-orb-b { width: 360px; height: 360px; right: -90px; top: 4%; background: color-mix(in srgb, var(--accent) 45%, transparent); animation: hero-drift-b 23s ease-in-out infinite; }
+.hero-orb-c { width: 300px; height: 300px; left: 32%; bottom: -110px; background: color-mix(in srgb, var(--primary) 30%, var(--bg-alt)); animation: hero-drift-c 16s ease-in-out infinite; }
+
+/* spinning vinyl with sound rings radiating out of it */
+.hero-vinyl {
+  position: absolute; right: 7%; top: 14%; width: 190px; height: 190px; border-radius: 50%; opacity: 0.45;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--accent) 70%, transparent) 0 14%, transparent 15%),
+    repeating-radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--primary) 30%, transparent) 0 1px, transparent 1px 8px);
+  animation: hero-spin 16s linear infinite;
+}
+.hero-ring { position: absolute; right: 7%; top: 14%; width: 190px; height: 190px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--primary) 32%, transparent); opacity: 0; }
+.hero-ring-a { animation: hero-pulse 6s ease-out infinite; }
+.hero-ring-b { animation: hero-pulse 6s ease-out infinite 2s; border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+.hero-ring-c { animation: hero-pulse 6s ease-out infinite 4s; }
+
+/* scrolling sound waves along the bottom */
+.hero-waves { position: absolute; left: 0; right: 0; bottom: 0; height: 46%; }
+.hero-wave { position: absolute; left: 0; bottom: 0; width: 200%; height: 100%; will-change: transform; }
+.hero-wave-1 { animation: hero-wave-scroll 19s linear infinite; }
+.hero-wave-1 path { fill: color-mix(in srgb, var(--primary) 15%, transparent); }
+.hero-wave-2 { animation: hero-wave-scroll 27s linear infinite reverse; height: 82%; }
+.hero-wave-2 path { fill: color-mix(in srgb, var(--accent) 13%, transparent); }
+.hero-wave-3 { animation: hero-wave-scroll 36s linear infinite; height: 64%; }
+.hero-wave-3 path { fill: color-mix(in srgb, var(--primary) 9%, transparent); }
+
+/* equalizer bars pulsing behind the waves */
+.hero-eq { position: absolute; left: 0; right: 0; bottom: 0; height: 96px; display: flex; align-items: flex-end; justify-content: center; gap: 6px; padding: 0 5%; opacity: 0.26; }
+.hero-eq-bar { flex: 1; max-width: 10px; height: 16%; background: var(--primary); border-radius: 99px 99px 0 0; animation: hero-eq 1.35s ease-in-out infinite; }
+.hero-eq-bar:nth-child(odd) { background: var(--accent); }
+.hero-eq-bar:nth-child(3n) { animation-duration: 1.05s; }
+.hero-eq-bar:nth-child(4n) { animation-duration: 1.75s; }
+.hero-eq-bar:nth-child(5n) { animation-duration: 0.9s; }
+.hero-eq-bar:nth-child(1) { animation-delay: -0.10s; }
+.hero-eq-bar:nth-child(2) { animation-delay: -0.35s; }
+.hero-eq-bar:nth-child(3) { animation-delay: -0.55s; }
+.hero-eq-bar:nth-child(4) { animation-delay: -0.20s; }
+.hero-eq-bar:nth-child(5) { animation-delay: -0.80s; }
+.hero-eq-bar:nth-child(6) { animation-delay: -0.45s; }
+.hero-eq-bar:nth-child(7) { animation-delay: -0.15s; }
+.hero-eq-bar:nth-child(8) { animation-delay: -0.70s; }
+.hero-eq-bar:nth-child(9) { animation-delay: -0.25s; }
+.hero-eq-bar:nth-child(10) { animation-delay: -0.95s; }
+.hero-eq-bar:nth-child(11) { animation-delay: -0.40s; }
+.hero-eq-bar:nth-child(12) { animation-delay: -0.60s; }
+.hero-eq-bar:nth-child(13) { animation-delay: -0.05s; }
+.hero-eq-bar:nth-child(14) { animation-delay: -0.85s; }
+.hero-eq-bar:nth-child(15) { animation-delay: -0.30s; }
+.hero-eq-bar:nth-child(16) { animation-delay: -0.50s; }
+.hero-eq-bar:nth-child(17) { animation-delay: -0.75s; }
+.hero-eq-bar:nth-child(18) { animation-delay: -0.18s; }
+.hero-eq-bar:nth-child(19) { animation-delay: -0.65s; }
+.hero-eq-bar:nth-child(20) { animation-delay: -0.28s; }
+.hero-eq-bar:nth-child(21) { animation-delay: -0.90s; }
+.hero-eq-bar:nth-child(22) { animation-delay: -0.42s; }
+
+/* music notes drifting up through the scene */
+.hero-notes { position: absolute; inset: 0; }
+.hero-note { position: absolute; bottom: -8%; font-size: 1.7rem; line-height: 1; color: color-mix(in srgb, var(--primary) 60%, transparent); opacity: 0; animation: hero-note-float 14s linear infinite; }
+.hero-note:nth-child(even) { color: color-mix(in srgb, var(--accent) 60%, transparent); font-size: 1.3rem; }
+.hero-note:nth-child(1) { left: 8%; animation-delay: 0s; }
+.hero-note:nth-child(2) { left: 22%; animation-delay: -3.5s; animation-duration: 17s; }
+.hero-note:nth-child(3) { left: 37%; animation-delay: -7s; animation-duration: 12s; }
+.hero-note:nth-child(4) { left: 54%; animation-delay: -10s; animation-duration: 16s; }
+.hero-note:nth-child(5) { left: 71%; animation-delay: -5s; animation-duration: 13s; }
+.hero-note:nth-child(6) { left: 88%; animation-delay: -12s; animation-duration: 18s; }
+
+@keyframes hero-drift-a { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(70px, 40px) scale(1.12); } }
+@keyframes hero-drift-b { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-55px, 34px) scale(1.18); } }
+@keyframes hero-drift-c { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-34px, -28px) scale(1.08); } }
+@keyframes hero-spin { to { transform: rotate(360deg); } }
+@keyframes hero-pulse { 0% { transform: scale(0.8); opacity: 0.55; } 100% { transform: scale(2.2); opacity: 0; } }
+@keyframes hero-wave-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes hero-eq { 0%, 100% { height: 16%; } 50% { height: 88%; } }
+@keyframes hero-note-float {
+  0% { transform: translate(0, 0) rotate(-8deg); opacity: 0; }
+  12% { opacity: 0.85; }
+  50% { transform: translate(26px, -50vh) rotate(10deg); }
+  85% { opacity: 0.5; }
+  100% { transform: translate(-14px, -105vh) rotate(-6deg); opacity: 0; }
+}
+
+@media (max-width: 800px) {
+  .hero-vinyl, .hero-ring { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb, .hero-vinyl, .hero-ring, .hero-eq-bar, .hero-wave, .hero-note { animation: none; }
+  .hero-ring { opacity: 0.25; }
+  .hero-eq-bar { height: 34%; }
+  .hero-note { opacity: 0.5; }
+}
 
 .btn { display: inline-block; padding: 12px 22px; border-radius: var(--radius); font-weight: 700; border: 1px solid transparent; cursor: pointer; transition: transform 0.08s ease, opacity 0.15s ease; }
 .btn:hover { transform: translateY(-2px); }
