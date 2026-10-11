@@ -1,7 +1,6 @@
 import { site } from "../data/site.js";
-import ThemeSwitcher from "./ThemeSwitcher.jsx";
 
-export default function Header({ theme, setTheme }) {
+export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -14,7 +13,6 @@ export default function Header({ theme, setTheme }) {
           <a href="#tour">Tour</a>
           <a href="#contact">Contact</a>
         </nav>
-        <ThemeSwitcher theme={theme} setTheme={setTheme} />
       </div>
     </header>
   );

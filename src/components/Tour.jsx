@@ -9,10 +9,18 @@ function formatDate(iso) {
   };
 }
 
+function formatDayRange(startIso, endIso) {
+  const start = new Date(startIso + "T00:00:00");
+  const end = new Date(endIso + "T00:00:00");
+  const startDay = start.toLocaleDateString("en-US", { day: "2-digit" });
+  const endDay = end.toLocaleDateString("en-US", { day: "2-digit" });
+  return `${startDay}–${endDay}`;
+}
+
 export default function Tour() {
   const today = new Date().toISOString().slice(0, 10);
   const upcoming = tourDates
-    .filter((t) => t.date >= today)
+    .filter((t) => (t.endDate || t.date) >= today)
     .sort((a, b) => a.date.localeCompare(b.date));
 
   return (
@@ -23,11 +31,14 @@ export default function Tour() {
           <ul className="tour-list">
             {upcoming.map((t, i) => {
               const d = formatDate(t.date);
+              const dayLabel = t.endDate
+                ? formatDayRange(t.date, t.endDate)
+                : d.day;
               return (
                 <li className="tour-item card" key={i}>
                   <div className="tour-date">
                     <span className="tour-month">{d.month}</span>
-                    <span className="tour-day">{d.day}</span>
+                    <span className="tour-day">{dayLabel}</span>
                     <span className="tour-year">{d.year}</span>
                   </div>
                   <div className="tour-info">
@@ -41,7 +52,7 @@ export default function Tour() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Tickets
+                      Info
                     </a>
                   ) : (
                     <span className="tour-link tour-link-muted">Details soon</span>
